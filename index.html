@@ -2,7 +2,7 @@
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>CodePen - Untitled</title>
+  <title>CodePen - A Pen by ali dakhil</title>
   <link rel="stylesheet" href="./style.css">
 
 </head>
@@ -20,16 +20,24 @@
     <div class="container">
         <!-- 1- رسالة ترحيبية في أول ووسط الصفحة -->
         <h1>مرحباً بكم في تطبيق الجنائز</h1>
+        
         <!-- 2- اسم الجامع وشعارها في وسط الصفحة -->
-        <h2>مسجد الراجحي</h2>
-        <img src="logo.png" alt="شعار المسجد" class="logo">
+        <div class="mosque-info">
+            <img src="logo.png" alt="شعار الجامع" class="logo">
+            <h2>اسم الجامع</h2>
+        </div>
+        
         <!-- 3- زر "القائمة" -->
-        <button onclick="toggleMenu()">القائمة</button>
+        <button class="btn-menu" onclick="toggleMenu()">القائمة</button>
+        
         <!-- 4- زر "إضافة جنازة" -->
-        <button onclick="toggleForm()">إضافة جنازة</button>
+        <button class="btn-add" onclick="toggleForm()">إضافة جنازة</button>
+
+        <!-- زر متابعة الحالة -->
+        <button class="btn-status" onclick="openStatusPage()">متابعة الحالة</button>
 
         <!-- نموذج إضافة جنازة جديدة -->
-        <div id="funeral-form" style="display: none;">
+        <div id="funeral-form" class="form-container" style="display: none;">
             <h3>إضافة جنازة جديدة</h3>
             <form id="funeralForm">
                 <div class="form-row">
@@ -41,7 +49,7 @@
                             <option value="البواردي حي العزيزية">البواردي حي العزيزية</option>
                         </select>
                         <!-- 12- زر لإضافة جامع جديد -->
-                        <button type="button" onclick="addNewMosque()">إضافة جامع جديد</button>
+                        <button type="button" class="btn-add-mosque" onclick="addNewMosque()">إضافة جامع جديد</button>
                     </div>
 
                     <div class="form-group">
@@ -58,27 +66,72 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="menCount">عدد جنائز الرجال:</label>
-                        <input type="number" id="menCount" min="0" required>
+                        <label for="idNumber">رقم الهوية:</label>
+                        <input type="text" id="idNumber" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="womenCount">عدد جنائز النساء:</label>
-                        <input type="number" id="womenCount" min="0" required>
+                        <label for="name">الاسم:</label>
+                        <input type="text" id="name" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="childrenCount">عدد جنائز الأطفال:</label>
-                        <input type="number" id="childrenCount" min="0" required>
+                        <label for="age">العمر:</label>
+                        <input type="number" id="age" min="0" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cemetery">المقبرة:</label>
+                        <select id="cemetery" required>
+                            <option value="مقبرة النسيم">مقبرة النسيم</option>
+                            <option value="مقبرة الشمال">مقبرة الشمال</option>
+                            <option value="خارج الرياض">خارج الرياض</option>
+                            <option value="خارج السعودية">خارج السعودية</option>
+                        </select>
+                        <!-- زر لإضافة مقبرة جديدة -->
+                        <button type="button" class="btn-add-cemetery" onclick="addNewCemetery()">إضافة مقبرة جديدة</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">الجنس:</label>
+                        <select id="gender" required>
+                            <option value="رجل">رجل</option>
+                            <option value="امرأة">امرأة</option>
+                            <option value="طفل">طفل</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="graveNumber">رقم القبر:</label>
+                        <input type="text" id="graveNumber" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="rowNumber">رقم الصف:</label>
+                        <input type="text" id="rowNumber" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status">الحالة:</label>
+                        <select id="status" required>
+                            <option value="تم التغسيل والصلاة">تم التغسيل والصلاة</option>
+                            <option value="تم الدفن">تم الدفن</option>
+                            <option value="تم النقل خارج الرياض">تم النقل خارج الرياض</option>
+                            <option value="تم النقل خارج السعودية">تم النقل خارج السعودية</option>
+                        </select>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="notes">ملاحظات:</label>
-                    <textarea id="notes" rows="2"></textarea>
+                    <textarea id="notes" rows="3"></textarea>
                 </div>
 
-                <!-- 5- زر "إضافة" لحفظ البيانات المدخلة -->
+                <!-- 5- زر "إضافة" لحفظ البيانات المدخلة في "قائمة الجنائز" -->
                 <button type="button" class="btn-submit" onclick="addFuneral()">إضافة</button>
             </form>
         </div>
@@ -86,14 +139,27 @@
         <!-- 6- قائمة الجنائز -->
         <div id="funeral-list">
             <h3>قائمة الجنائز</h3>
+
+            <!-- 15- عرض جميع البيانات المدخلة -->
+            <div class="filter-section">
+                <label>
+                    <input type="checkbox" id="showAll" onchange="displayFunerals()"> عرض جميع الجنائز
+                </label>
+            </div>
+
             <table id="funeralTable">
                 <thead>
                     <tr>
+                        <th>رقم الهوية</th>
+                        <th>الاسم</th>
+                        <th>العمر</th>
                         <th>اسم الجامع</th>
                         <th>الفترة</th>
-                        <th>رجال</th>
-                        <th>نساء</th>
-                        <th>أطفال</th>
+                        <th>المقبرة</th>
+                        <th>الجنس</th>
+                        <th>رقم القبر</th>
+                        <th>رقم الصف</th>
+                        <th>الحالة</th>
                         <th>ملاحظات</th>
                         <th>تعديل</th>
                         <th>حذف</th>
@@ -105,11 +171,53 @@
             </table>
             <!-- 7- زر "طباعة" لطباعة قائمة الجنائز -->
             <button class="btn-submit" onclick="printTable()">طباعة</button>
+            <!-- 14- زر لتنزيل البيانات في صيغة قابلة للقراءة -->
+            <button class="btn-submit" onclick="downloadData()">تنزيل البيانات</button>
         </div>
     </div>
 
     <!-- ملف JavaScript -->
     <script src="script.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متابعة الحالة</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>متابعة حالة الجنائز</h1>
+
+        <div class="filter-section">
+            <label>
+                <input type="checkbox" id="showAllStatus" onchange="displayStatusFunerals()"> عرض جميع الجنائز
+            </label>
+        </div>
+
+        <table id="statusTable">
+            <thead>
+                <tr>
+                    <th>الاسم</th>
+                    <th>رقم القبر</th>
+                    <th>رقم الصف</th>
+                    <th>الحالة</th>
+                    <th>تعديل</th>
+                </tr>
+            </thead>
+            <tbody id="statusTableBody">
+                <!-- سيتم عرض البيانات المدخلة هنا -->
+            </tbody>
+        </table>
+        <!-- زر العودة للصفحة الرئيسية -->
+        <button class="btn-submit" onclick="window.location.href='index.html'">العودة</button>
+    </div>
+
+    <!-- ملف JavaScript الخاص بصفحة الحالة -->
+    <script src="status.js"></script>
 </body>
 </html>
 <!-- partial -->
